@@ -1,0 +1,75 @@
+.button {
+    padding: 30px 0px 30px 0px;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    font-size: 40px;
+}
+
+
+.btn-start {
+    background-color: #7a67ef;
+    color: #7a67ef;
+    border: 1px solid #5b42ff;
+}
+
+.btn-active {
+    background-color: #beb4ff;
+    color: #56507a;
+    border: 1px solid #5b42ff;
+}
+
+.btn-done {
+    background-color: #d6ffb4;
+    color: #587a50;
+    border: 1px solid #42ff4b;
+}
+
+.none {
+    display: none;
+}
+
+.contTimer{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.for2cards{
+    width: 200px;
+    height: 200px;
+}
+
+.for8cards{
+    width: 400px;
+    height: 400px;
+}
+
+.for18cards {
+    width: 600px;
+    height: 600px;
+}
+
+.for32cards {
+    width: 560px;
+    height: 560px;
+}
+
+.for50cards {
+    width: 700px;
+    height: 700px;
+}
+
+.for32cards button {
+    padding: 20px 0px 20px 0px;
+    width: 70px;
+    height: 70px;
+    font-size: 30px;
+}
+
+.for50cards button {
+    padding: 20px 0px 20px 0px;
+    width: 70px;
+    height: 70px;
+    font-size: 30px;
+}

@@ -21,6 +21,8 @@ function shuffle(arr) {
     return arr;
 }
 
+let count;
+
 // Этап 3. Используйте две созданные функции для создания массива перемешанными номерами. На основе этого массива вы можете создать DOM-элементы карточек. У каждой карточки будет свой номер из массива произвольных чисел. Вы также можете создать для этого специальную функцию. count - количество пар.
 
 
@@ -29,37 +31,30 @@ class Card {
     this._container = container;
     this._cardNumber = cardNumber;
     this._open = false;
-    this.success = false;
-    this.cardElement = document.createElement('div');
+    this._success = false;
     let temp = Math.floor(Math.random()*100);
-    this.cardElement.id =  temp;
+    this.id =  temp;
     this._createElement()
   }
   get cardNumber() {
     return this._cardNumber;
   }
-
   set cardNumber(value) {
-    if (typeof value === 'number' || value >=0) {
+    if (typeof value === 'number' && value >=0) {
         this._cardNumber = value;
-        this._updateCard()
+        this._updateCard();
     }
   }
-
   set open(value) {
     if (this._success) return;
     if (typeof value === 'boolean') {
         this._open = value;
         this._updateCardDisplay();
-        if (value) {
-            this._onCardClick(this);
-        }
     }
   }
   get open() {
     return this._open;
   }
-
   set success(value) {
     if (typeof value === "boolean") {
         this._success = value;
@@ -69,40 +64,114 @@ class Card {
   get success() {
     return this._success;
   }
-
   _createElement(){
-
-    this.cardElement.className = 'card';
-    this.cardElement.textContent = this._open ? this.cardNumber : '';
-    this.cardElement.addEventListener ('click', () => {
+    this._cardElement = document.createElement('button');
+    this._cardElement.classList.add( "btn-start", "button");
+    this._cardElement.setAttribute('id', this.id);
+    this._cardElement.innerHTML = this._open ? this._cardNumber : '';
+    this._cardElement.addEventListener ('click', () => {
         this._onCardClick()
     })
-    this._container.appendChild(this.cardElement);
+    document.getElementById(this._container).append(this._cardElement);
+  }
+  _updateCard() {
+    this._cardElement.textContent = this._open ? this._cardNumber : ''; // Обновляем текст карточки
+    }
+  _updateCardDisplay() {
+    if (this._open) {
+        this._cardElement.classList.add('flipped'); // Добавляем класс для переворота
+        this._cardElement.textContent = this._cardNumber; // Отображаем номер
+    } else {
+        this._cardElement.classList.remove('flipped'); // Убираем класс переворота
+        this._cardElement.textContent = ''; // Скрываем номер
+    }
+  }
+  _updateCardSuccess() {
+    this._cardElement.classList.add('success'); // Добавляем класс успеха
+    this._cardElement.textContent = this._cardNumber; // Отображаем номер
+    this._cardElement.style.pointerEvents = 'none'; // Запрещаем клики по карточке
+  }
+    // Метод для обработки клика по карточке
+  _onCardClick() {
+    this._open = true; // Открываем карточку
+    this._cardElement.innerHTML = this._open ? this._cardNumber : '';
+    this._updateCardDisplay();
+  }
+}
+
+class CardAmazing extends Card {
+  constructor(container, cardNumber) {
+    super(container);
+    this.cardNumber = cardNumber;
   }
 
-  _updateCard() {
-    this.cardElement.textContent = this._open ? this._cardNumber : ''; // Обновляем текст карточки
+  get cardNumber() {
+    return this._cardNumber;
+  }
+  set cardNumber(value) {
+    if (typeof value === 'number' && value >=0) {
+      const cardsImgArray = [
+        "./img/1.svg",
+        "./img/2.svg",
+        "./img/3.svg",
+        "./img/4.svg",
+        "./img/5.svg",
+        "./img/6.svg",
+        "./img/7.svg",
+        "./img/8.svg",
+      ]
+      this._cardNumber = cardsImgArray[value];
+      this._updateCard();
     }
+  }
+
+  _createElement() {
+    this._cardElement = document.createElement('button');
+    this._cardElement.classList.add( "btn-start", "button");
+    this._cardElement.setAttribute('id', this.id);
+    this._cardElement.addEventListener ('click', () => {
+      this._onCardClick()
+  })
+    document.getElementById(this._container).append(this._cardElement);
+  }
+  _updateCard() {
+    if (this._open) {
+      console.log(this._cardNumber)
+      this._cardElement.style.backgroundImage = `url(${this._cardNumber})`;
+      this._cardElement.textContent = "";
+    } else {
+      this._cardElement.style.backgroundImage = "none";
+      this._cardElement.textContent = "";
+    }
+  }
 
   _updateCardDisplay() {
     if (this._open) {
-        this.cardElement.classList.add('flipped'); // Добавляем класс для переворота
-        this.cardElement.textContent = this._cardNumber; // Отображаем номер
-    } else {
-        this.cardElement.classList.remove('flipped'); // Убираем класс переворота
-        this.cardElement.textContent = ''; // Скрываем номер
+      this._cardElement.classList.add('flipped'); // Добавляем класс для переворота
+      this._cardElement.style.backgroundImage = `url(${this._cardNumber})`; // Отображаем картинку
+  } else {
+      this._cardElement.classList.remove('flipped'); // Убираем класс переворота
+      this._cardElement.textContent = '';
+      this._cardElement.style.backgroundImage = "none"; // Скрываем картинку
     }
   }
 
-  _updateCardSuccess() {
-    this.cardElement.classList.add('success'); // Добавляем класс успеха
-    this.cardElement.textContent = this._cardNumber; // Отображаем номер
-    this.cardElement.style.pointerEvents = 'none'; // Запрещаем клики по карточке
+  _onCardClick() {
+    this._open = true; // Открываем карточку
+    if (this._open) {
+      console.log(this._cardNumber)
+      this._cardElement.style.backgroundImage = `url(${this._cardNumber})`;
+      this._cardElement.textContent = "";
+    } else {
+      this._cardElement.style.backgroundImage = "none";
+      this._cardElement.textContent = "";
+    }
+    this._updateCardDisplay();
   }
 
-    // Метод для обработки клика по карточке
-  _onCardClick() {
-    this.open = true; // Открываем карточку
+  _updateCardSuccess() {
+    this._cardElement.classList.add('success'); // Добавляем класс успеха
+    this._cardElement.style.pointerEvents = 'none'; // Запрещаем клики по карточке
   }
 }
 
@@ -124,7 +193,7 @@ function Timer() {
   let timer = document.getElementById('timer');
   let seconds = timer.innerHTML;
 
-  function countdown() {;
+  function countdown() {
       --seconds;
       timer.innerHTML = seconds;
       if (seconds == 0) {
@@ -138,123 +207,160 @@ function Timer() {
 function StartedWindow(){
   const div = document.createElement('div');
   div.classList.add('containerStart');
-  div.setAttribute('id','containerStart')
-  const p = document.createElement('p');
-  p.classList.add('start-descr');
-  p.textContent = 'Select the number of cards vertically/horizontally (the number must be a multiple of 2): ';
-  const button = document.createElement('button');
-  button.classList.add('start-but');
-  button.setAttribute('type', 'submit');
-  button.textContent = 'Start the game';
+  div.setAttribute('id','containerStart');
+  const startPrewiew = document.createElement('div');
+  const prewiew = document.createElement('p');
+  prewiew.classList.add('prewiew')
+  prewiew.textContent ="Choose: you want to play with numbers or with pictures?";
+  const btnPictures = document.createElement("button");
+  btnPictures.textContent = 'Pictures';
+  const btnNumbers = document.createElement("button");
+  btnNumbers.textContent = "Numbers";
+  btnNumbers.classList.add('btn-choice');
+  btnPictures.classList.add("btn-choice")
+  startPrewiew.append(prewiew, btnNumbers, btnPictures);
+  div.append(startPrewiew);
   document.body.append(div);
-  const form = document.createElement('form');
-  const label = document.createElement('label');
-  const input = document.createElement('input');
-  form.setAttribute('onsubmit',"event.preventDefault();");
-  input.setAttribute('type','number');
-  input.setAttribute('id','number');
-  input.setAttribute('max', '10');
-  input.setAttribute('min', '2');
-  div.append(p);
-  div.append(form);
-  form.append(label);
-  label.append(input);
-  form.append(button);
+  function createStartForm(maxCount, type) {
+    const p = document.createElement('p');
+    p.classList.add('start-descr');
+    p.textContent = `Select the number of cards vertically/horizontally (the number must be a multiple of 2, max: ${maxCount}): `;
+    const button = document.createElement('button');
+    button.classList.add('start-but');
+    button.setAttribute('type', 'submit');
+    button.textContent = 'Start the game';
 
-  form.addEventListener('submit', function createGame() {
-    const num = Number(input.value);
-    if (((num % 2) != 1) & (num !=0)) {
-        if (num == 2) {
-            count = 2;
-        } else if (num == 4) {
-            count = 8;
-        } else if (num == 6) {
-            count = 18;
-        } else if (num == 8) {
-            count = 32;
-        } else if (num == 10) {
-            count = 50;
+    const form = document.createElement('form');
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+    form.setAttribute('onsubmit',"event.preventDefault();");
+    input.classList.add('input');
+    input.setAttribute('type','number');
+    input.setAttribute('id','number');
+    input.setAttribute('max', maxCount);
+    input.setAttribute('min', '2');
+    div.append(p);
+    div.append(form);
+    form.append(label);
+    label.append(input);
+    form.append(button);
+
+    form.addEventListener('submit', function createGame() {
+      const num = Number(input.value);
+      if (((num % 2) != 1) & (num !=0)) {
+          if (num == 2) {
+              count = 2;
+          } else if (num == 4) {
+              count = 8;
+          } else if (num == 6) {
+              count = 18;
+          } else if (num == 8) {
+              count = 32;
+          } else if (num == 10) {
+              count = 50;
+          }
+        }
+        else {
+          count = 8;
+        }
+      const startedContainer = document.getElementById('containerStart');
+      startedContainer.classList.add('none');
+      const arrNew = shuffle(createNumbersArray(count));
+      let cards = [];
+
+      const createCarts = (count) => {
+        const div = document.createElement('div');
+        div.setAttribute('id', 'div')
+        document.body.append(div);
+        div.classList.add('container');
+        const gameContainer = document.createElement('div');
+        gameContainer.classList.add('game-container');
+        gameContainer.setAttribute('id' , "gameContainer")
+        div.append(gameContainer)
+        if (count == 2) {
+            gameContainer.classList.add('for2cards');
+        } else if (count == 8) {
+          gameContainer.classList.add('for8cards');
+        } else if (count == 18) {
+          gameContainer.classList.add('for18cards');
+        } else if (count == 32) {
+          gameContainer.classList.add('for32cards');
+        } else if (count == 50) {
+          gameContainer.classList.add('for50cards');
+        };
+        let NumArr = [];
+        let countNum = 0;
+        let index = 0;
+
+        for (let i = 0; i < count * 2; i++) {
+          const card = new type("gameContainer", arrNew[i]);
+          cards.push(card);
+          card._cardElement.addEventListener('click', function () {
+            NumArr.push(card);
+            index++;
+            card.open = true;
+            card._cardElement.classList.remove('btn-start');
+            card._cardElement.classList.add('btn-active');
+            const elem1 = NumArr[0];
+            const elem2 = NumArr[1];
+            card._cardElement.style.pointerEvents = "none"
+
+            if (index == 2) {
+              if (elem1.cardNumber === elem2.cardNumber) {
+                countNum += 2;
+                elem1._cardElement.classList.add('btn-done');
+                elem2._cardElement.classList.add('btn-done');
+                elem1.success = true;
+                elem2.success = true;
+              } else {
+                setTimeout(() => {
+                    elem1._cardElement.classList.remove('btn-active');
+                    elem2._cardElement.classList.remove('btn-active');
+                    elem1._cardElement.classList.add('btn-start');
+                    elem2._cardElement.classList.add('btn-start');
+                    elem1.open = false;
+                    elem2.open = false;
+                    elem1._cardElement.style.pointerEvents = "auto";
+                    elem2._cardElement.style.pointerEvents = "auto";
+                }, 1000);
+              }
+              index = 0;
+              NumArr=[];
+
+                // Проверка на окончание игры
+
+              if (countNum == count * 2) {
+                const finalWindow = document.createElement('div');
+                document.body.append(finalWindow);
+                finalWindow.classList.add('finalWindow');
+                const p = document.createElement('p');
+                p.textContent = "You win! Do you want to restart the game?";
+                finalWindow.append(p)
+                const buttonRestart = document.createElement('button');
+                buttonRestart.classList.add("btn-restart");
+                buttonRestart.textContent = 'Restart';
+                buttonRestart.onclick = function () {
+                    location.reload();
+                };
+                finalWindow.append(buttonRestart);
+              }
+            }
+          });
         }
       }
-
-    const startedContainer = document.getElementById('containerStart');
-    startedContainer.classList.add('none');
-    const arrNew = shuffle(createNumbersArray(count));
-
-
-    const createCarts = count => {
-      const div = document.createElement('div');
-      document.body.append(div);
-      div.classList.add('container');
-      if (count == 2) {
-          div.classList.add('for2cards');
-      } else if (count == 8) {
-          div.classList.add('for8cards');
-      } else if (count == 18) {
-          div.classList.add('for18cards');
-      } else if (count == 32) {
-          div.classList.add('for32cards');
-      } else if (count == 50) {
-          div.classList.add('for50cards');
-      };
-      let NumArr = [];
-      let countNum = 0;
-      let index = 0;
-      let idArr = [];
-
-      for (let i = 0; i < count * 2; i++) {
-        const card = new Card(div, arrNew[i]);
-        card.cardElement.addEventListener('click', function () {
-          if (card.open) return; // Игнорировать клик, если кнопку уже нажали
-          NumArr.unshift(card.cardNumber);
-          idArr.unshift(card.cardElement.id);
-          index++;
-          card.cardElement.classList.remove('btn-start');
-          card.cardElement.classList.add('btn-active');
-          card.cardElement.disabled = true; // Деактивируем кнопку
-
-          const elem1 = document.getElementById(idArr[0]);
-          const elem2 = document.getElementById(idArr[1]);
-
-          if (index == 2) {
-            if (NumArr[0] == NumArr[1]) {
-              countNum += 2;
-              elem1.classList.add('btn-done');
-              elem2.classList.add('btn-done');
-            } else {
-              setTimeout(() => {
-                  elem1.classList.remove('btn-active');
-                  elem2.classList.remove('btn-active');
-                  elem1.classList.add('btn-start');
-                  elem2.classList.add('btn-start');
-                  elem1.disabled = false;
-                  elem2.disabled = false;
-              }, 100);
-            }
-            idArr = [];
-            index = 0;
-
-              // Проверка на окончание игры
-
-            if (countNum == count * 2) {
-              const finalWindow = document.createElement('div');
-              document.body.append(finalWindow);
-              finalWindow.classList.add('finalWindow');
-              finalWindow.textContent = "You win! Do you want to restart the game?";
-              const buttonRestart = document.createElement('button');
-              buttonRestart.textContent = 'Restart';
-              buttonRestart.onclick = function () {
-                  location.reload();
-              };
-              finalWindow.append(buttonRestart);
-            }
-          }
-        });
-      }
+      createCarts(count);
     }
-    createCarts(count);
+    )
   }
-  )
+  btnNumbers.addEventListener('click', () => {
+    createStartForm(10, Card);
+    startPrewiew.style.display = "none";
+  });
+
+  btnPictures.addEventListener("click", () => {
+    createStartForm(6, CardAmazing);
+    startPrewiew.style.display = "none";
+  })
 
   // Timer();
 };

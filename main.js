@@ -1,5 +1,4 @@
 // Этап 1. Создайте функцию, генерирующую массив парных чисел. Пример массива, который должна возвратить функция: [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8].count - количество пар.
-// const count = 4;
 function createNumbersArray(count) {
     let arr = [];
     for (let i = 1; i < count + 1; i++) {
@@ -8,9 +7,7 @@ function createNumbersArray(count) {
     return arr;
 
 }
-
 // Этап 2. Создайте функцию перемешивания массива.Функция принимает в аргументе исходный массив и возвращает перемешанный массив. arr - массив чисел
-
 function shuffle(arr) {
     for (let i = arr.length - 1; i >= 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -20,11 +17,7 @@ function shuffle(arr) {
     }
     return arr;
 }
-
 let count;
-
-// Этап 3. Используйте две созданные функции для создания массива перемешанными номерами. На основе этого массива вы можете создать DOM-элементы карточек. У каждой карточки будет свой номер из массива произвольных чисел. Вы также можете создать для этого специальную функцию. count - количество пар.
-
 
 class Card {
   constructor(container, cardNumber) {
@@ -120,7 +113,7 @@ class CardAmazing extends Card {
         "./img/7.svg",
         "./img/8.svg",
       ]
-      this._cardNumber = cardsImgArray[value];
+      this._cardNumber = cardsImgArray[value -1];
       this._updateCard();
     }
   }
@@ -246,6 +239,7 @@ function StartedWindow(){
     form.append(button);
 
     form.addEventListener('submit', function createGame() {
+      Timer();
       const num = Number(input.value);
       if (((num % 2) != 1) & (num !=0)) {
           if (num == 2) {
@@ -354,14 +348,16 @@ function StartedWindow(){
   }
   btnNumbers.addEventListener('click', () => {
     createStartForm(10, Card);
+
     startPrewiew.style.display = "none";
   });
 
   btnPictures.addEventListener("click", () => {
-    createStartForm(6, CardAmazing);
+    createStartForm(4, CardAmazing);
+
     startPrewiew.style.display = "none";
   })
 
-  // Timer();
+
 };
 
